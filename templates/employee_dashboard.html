@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Dashboard</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: url('https://images.unsplash.com/photo-1498050108023-c5249f4df085') no-repeat center center/cover;
+            color: white;
+        }
+
+        .overlay {
+            background: rgba(0,0,0,0.7);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 30px;
+            background: rgba(0,0,0,0.9);
+        }
+
+        .logo {
+            color: #00c6ff;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            padding: 8px 14px;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover {
+            background: #00c6ff;
+            color: black;
+        }
+
+        .active {
+            background: #ff4d4d;
+        }
+
+        .profile-card {
+            background: white;
+            color: black;
+            width: 420px;
+            margin: 60px auto;
+            padding: 25px;
+            border-radius: 15px;
+        }
+
+        .top-section {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .top-section img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+        }
+
+        .btn {
+            padding: 10px;
+            background: #00c6ff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+<div class="overlay">
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="logo">Freelancing Hub</div>
+
+        <div class="nav-links">
+            <a href="/employee_dashboard" class="active">Profile</a>
+            <a href="/employee_projects">View Projects</a>
+            <a href="/my_tasks">My Tasks</a>
+            <a href="/view_resources">Resources</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <!-- PROFILE CARD -->
+    <div class="profile-card">
+
+        <div class="top-section">
+            <img src="{{ url_for('static', filename='uploads/' + image) }}">
+
+            <div>
+                <h2>{{ session['user'] }}</h2>
+                <p>{{ gender }} | {{ phone }}</p>
+                <p>👨‍💻 Employee</p>
+            </div>
+        </div>
+
+        <hr>
+
+        <p><b>📧 Email:</b> {{ session['user'] }}</p>
+        <p><b>📱 Phone:</b> {{ phone }}</p>
+
+        <div style="text-align:center;">
+            <a href="/edit_profile">
+                <button class="btn">Manage Profile</button>
+            </a>
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>

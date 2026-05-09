@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Projects</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: url('https://images.unsplash.com/photo-1498050108023-c5249f4df085') no-repeat center center/cover;
+            color: white;
+        }
+
+        .overlay {
+            background: rgba(0,0,0,0.7);
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 30px;
+            background: rgba(20,20,40,0.9);
+        }
+
+        .logo {
+            color: #00c6ff;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            padding: 8px 14px;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover {
+            background: #00c6ff;
+            color: black;
+        }
+
+        .active {
+            background: #ff4d4d;
+        }
+
+        /* GRID LAYOUT (LIKE EMPLOYER) */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            padding: 40px;
+        }
+
+        .card {
+            background: white;
+            width: 280px;
+            padding: 20px;
+            border-radius: 12px;
+            color: black;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .card h3 {
+            margin: 0;
+        }
+
+        .btn {
+            margin-top: 10px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            background: #00c6ff;
+        }
+
+        .btn:hover {
+            background: #009acd;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="overlay">
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="logo">Freelancing Hub</div>
+
+        <div class="nav-links">
+            <a href="/employee_dashboard">Profile</a>
+            <a href="/employee_projects" class="active">View Projects</a>
+            <a href="/my_tasks">My Tasks</a>
+            <a href="/view_resources">Resources</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <!-- PROJECT CARDS -->
+    <div class="container">
+
+        {% for project in projects %}
+            <div class="card">
+                <h3>{{ project.title }}</h3>
+                <p>{{ project.description }}</p>
+
+                <a href="/apply/{{ project.id }}">
+                    <button class="btn">Apply / Bid</button>
+                </a>
+            </div>
+        {% else %}
+            <p>No projects available</p>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

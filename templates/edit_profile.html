@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Profile</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f5f6fa;
+        }
+
+        .container {
+            width: 400px;
+            margin: 60px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 10px;
+            background: #2d6cdf;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Edit Profile</h2>
+
+    <img class="profile-img"
+         src="{{ url_for('static', filename='uploads/' + data[4]) if data[4] else url_for('static', filename='default.jpg') }}">
+
+    <form method="POST" enctype="multipart/form-data">
+
+        <input type="file" name="profile_pic">
+
+        <input type="text" name="name" value="{{ data[0] }}" required>
+        <input type="text" name="phone" value="{{ data[1] }}" required>
+
+        <select name="gender" required>
+            <option value="Male" {% if data[2] == 'Male' %}selected{% endif %}>Male</option>
+            <option value="Female" {% if data[2] == 'Female' %}selected{% endif %}>Female</option>
+        </select>
+
+        <input type="password" name="password" value="{{ data[3] }}" required>
+
+        <button type="submit">Update Profile</button>
+    </form>
+</div>
+
+</body>
+</html>

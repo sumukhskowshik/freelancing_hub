@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Resources</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3') no-repeat center center/cover;
+            color: white;
+        }
+
+        .overlay {
+            background: rgba(0,0,0,0.7);
+            min-height: 100vh;
+        }
+
+        /* ✅ SAME NAVBAR */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(0,0,0,0.9);
+        }
+
+        .logo {
+            color: #00c6ff;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            padding: 8px 14px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: #00c6ff;
+            color: black;
+        }
+
+        .active {
+            background: #ff4d4d;
+        }
+
+        /* SEARCH */
+        .search-box {
+            text-align: center;
+            padding-top: 30px;
+        }
+
+        .search-box input {
+            width: 350px;
+            padding: 10px;
+            border-radius: 6px;
+            border: none;
+        }
+
+        .search-box button {
+            padding: 10px 15px;
+            border: none;
+            background: #00c6ff;
+            color: black;
+            border-radius: 6px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* CARDS */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            padding: 40px;
+            justify-content: center;
+        }
+
+        .card {
+            background: white;
+            width: 320px;
+            padding: 18px;
+            border-radius: 14px;
+            color: black;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: #00c6ff;
+        }
+
+        .skills {
+            margin-bottom: 15px;
+        }
+
+        .skills span {
+            background: #e0e7ff;
+            color: #2d6cdf;
+            padding: 5px 10px;
+            margin: 3px;
+            display: inline-block;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+
+        .card video {
+            width: 100%;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-delete {
+            background: red;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .btn-delete:hover {
+            background: darkred;
+        }
+
+        .no-result {
+            text-align: center;
+            width: 100%;
+            color: red;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="overlay">
+
+    <!-- ✅ NAVBAR -->
+    <div class="navbar">
+
+        <div class="logo">
+            Freelancing Hub
+        </div>
+
+        <div class="nav-links">
+            <a href="/post_resource">Post Resource</a>
+            <a href="/view_resources" class="active">View Resources</a>
+            <a href="/logout">Logout</a>
+        </div>
+
+    </div>
+
+    <!-- SEARCH -->
+    <div class="search-box">
+
+        <form method="GET" action="/view_resources">
+
+            <input type="text"
+                   name="search"
+                   placeholder="Search by skills...">
+
+            <button type="submit">
+                Search
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- CARDS -->
+    <div class="container">
+
+    {% if data|length == 0 %}
+        <div class="no-result">
+            No matching resources found ❌
+        </div>
+    {% endif %}
+
+    {% for r in data %}
+
+    <div class="card">
+
+        <h3>{{ r[1] }}</h3>
+
+        <div class="skills">
+
+            {% for skill in r[2].split(',') %}
+                <span>{{ skill.strip() }}</span>
+            {% endfor %}
+
+        </div>
+
+        {% if r[3] %}
+
+        <video controls>
+            <source src="{{ url_for('static', filename='uploads/' + r[3]) }}"
+                    type="video/mp4">
+        </video>
+
+        {% else %}
+
+        <p>No video available</p>
+
+        {% endif %}
+
+        <form action="/delete_resource/{{ r[0] }}" method="POST">
+
+            <button type="submit" class="btn-delete">
+                Delete
+            </button>
+
+        </form>
+
+    </div>
+
+    {% endfor %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

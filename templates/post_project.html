@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Post Project - Employer</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: url('https://images.unsplash.com/photo-1551434678-e076c223a692') no-repeat center center/cover;
+            color: white;
+        }
+
+        .overlay {
+            background: rgba(0,0,0,0.7);
+            min-height: 100vh;
+        }
+
+        /* ✅ SAME NAVBAR AS DASHBOARD */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 30px;
+            background: rgba(0,0,0,0.9);
+        }
+
+        .logo {
+            color: #00c6ff; /* 🔥 BLUE */
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            padding: 8px 14px;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover {
+            background: #00c6ff;
+            color: black;
+        }
+
+        .active {
+            background: #ff4d4d;
+        }
+
+        /* FORM BOX */
+        .form-box {
+            width: 450px;
+            margin: 80px auto;
+            background: white;
+            color: black;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 25px rgba(0,0,0,0.4);
+        }
+
+        .form-box h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        textarea {
+            height: 90px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background: #00c6ff;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-submit:hover {
+            background: #009acd;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="overlay">
+
+    <!-- ✅ COMMON NAVBAR -->
+    <div class="navbar">
+        <div class="logo">Freelancing Hub</div>
+
+        <div class="nav-links">
+            <a href="/dashboard">Profile</a>
+            <a href="/post_project" class="active">Post Project</a>
+            <a href="/view_projects">View Posts</a>
+            <a href="/view_applications">View Assigned Tasks</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <!-- FORM -->
+    <div class="form-box">
+        <h2>Post a Project</h2>
+
+        <form method="POST">
+            <input type="text" name="title" placeholder="Project Title" required>
+
+            <textarea name="description" placeholder="Project Description" required></textarea>
+
+            <input type="text" name="skills" placeholder="Skills (Python, Flask...)" required>
+
+            <input type="number" name="budget" placeholder="Budget" required>
+
+            <input type="date" name="deadline" required>
+
+            <button type="submit" class="btn-submit">Submit</button>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>

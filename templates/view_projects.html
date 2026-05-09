@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Projects</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: url('https://images.unsplash.com/photo-1551434678-e076c223a692') no-repeat center center/cover;
+            color: white;
+        }
+
+        .overlay {
+            background: rgba(0,0,0,0.7);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(0,0,0,0.9);
+        }
+
+        .logo {
+            color: #00c6ff;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            padding: 8px 14px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: #00c6ff;
+            color: black;
+        }
+
+        .active {
+            background: #ff4d4d;
+        }
+
+        .search-box {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .search-box input {
+            width: 350px;
+            padding: 10px;
+            border-radius: 6px;
+            border: none;
+        }
+
+        .search-box button {
+            padding: 10px 15px;
+            border: none;
+            background: #00c6ff;
+            color: black;
+            border-radius: 6px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            padding: 20px 40px;
+        }
+
+        .card {
+            background: white;
+            width: 280px;
+            padding: 20px;
+            border-radius: 12px;
+            color: black;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            margin: 0;
+            color: #00c6ff;
+        }
+
+        .skills span {
+            background: #e0e7ff;
+            color: #2d6cdf;
+            padding: 5px 10px;
+            margin: 3px;
+            display: inline-block;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+
+        .info {
+            font-size: 14px;
+            margin-top: 10px;
+            color: #444;
+        }
+
+        .info span {
+            display: block;
+            margin-top: 5px;
+        }
+
+        .actions {
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 7px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 8px;
+            font-weight: bold;
+        }
+
+        .apply { 
+            background: #00c6ff;
+            color: black;
+        }
+
+        .delete { 
+            background: red; 
+            color: white; 
+        }
+
+        .view { 
+            background: #555; 
+            color: white; 
+        }
+
+        .no-result {
+            text-align: center;
+            width: 100%;
+            color: red;
+            font-weight: bold;
+        }
+
+        /* ✅ MODAL IMPROVED */
+        .modal {
+            display: none;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            width: 400px;
+            margin: 8% auto;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            color: black;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .modal-content h3 {
+            margin-bottom: 15px;
+            color: #00c6ff;
+        }
+
+        .modal-info {
+            text-align: left;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .modal-info p {
+            margin: 8px 0;
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 10px;
+            margin: 15px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        .modal button {
+            width: 100%;
+            padding: 10px;
+            background: #00c6ff;
+            color: black;
+            border: none;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .modal button:hover {
+            background: #00a8dd;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="overlay">
+
+<div class="navbar">
+    <div class="logo">Freelancing Hub</div>
+
+    <div class="nav-links">
+
+        {% if role == 'employer' %}
+            <a href="/dashboard">Profile</a>
+            <a href="/post_project">Post Project</a>
+            <a href="/view_projects" class="active">View Posts</a>
+            <a href="/view_applications">View Assigned Tasks</a>
+
+        {% elif role == 'employee' %}
+            <a href="/employee_dashboard">Profile</a>
+            <a href="/employee_projects" class="active">View Projects</a>
+            <a href="/my_tasks">My Tasks</a>
+            <a href="/view_resources">Resources</a>
+
+        {% endif %}
+
+        <a href="/logout">Logout</a>
+    </div>
+</div>
+
+<div class="search-box">
+    <form method="POST">
+        <input type="text" name="search" placeholder="Search by project title or skills..." required>
+        <button type="submit">Search</button>
+    </form>
+</div>
+
+<div class="container">
+
+{% if projects|length == 0 %}
+    <div class="no-result">No matching projects found ❌</div>
+{% endif %}
+
+{% for p in projects %}
+<div class="card">
+
+    <h3>{{ p[1] }}</h3>
+    <p>{{ p[2] }}</p>
+
+    <div class="skills">
+        {% if p[3] %}
+            {% for skill in p[3].split(',') %}
+                <span>{{ skill.strip() }}</span>
+            {% endfor %}
+        {% else %}
+            <span>No skills</span>
+        {% endif %}
+    </div>
+
+    <div class="info">
+        <span>💰 Budget: ₹{{ p[4] }}</span>
+        <span>📅 Deadline: {{ p[5] }}</span>
+        <span>🕒 Posted On: {{ p[6] }}</span>
+    </div>
+
+    <div class="actions">
+
+    {% if role == 'employee' %}
+        <button class="btn apply"
+            onclick="openModal({{ p[0] }}, {{ p[4] }}, {{ project_bids[p[0]] }})">
+            Apply / Bid
+        </button>
+
+    {% elif role == 'employer' %}
+        <a href="/delete_project/{{ p[0] }}">
+            <button class="btn delete">Delete</button>
+        </a>
+
+        <a href="/view_bids/{{ p[0] }}">
+            <button class="btn view">View Bids</button>
+        </a>
+    {% endif %}
+
+</div>
+
+</div>
+{% endfor %}
+
+</div>
+
+<!-- ✅ UPDATED MODAL -->
+<div id="bidModal" class="modal">
+    <div class="modal-content">
+
+        <span onclick="closeModal()" 
+              style="float:right; cursor:pointer; font-size:20px;">&times;</span>
+
+        <h3>Place Your Bid</h3>
+
+        <div class="modal-info">
+            <p>
+                <b>Current Lowest Bid:</b> 
+                ₹<span id="lowest_bid">0</span>
+            </p>
+
+            <p>
+                <b>Project Budget:</b> 
+                ₹<span id="project_budget">0</span>
+            </p>
+        </div>
+
+        <!-- ✅ FORM UPDATED -->
+        <form id="bidForm">
+
+            <input type="hidden" 
+                   name="project_id" 
+                   id="project_id">
+
+            <input type="number" 
+                   name="bid" 
+                   placeholder="Enter your bid amount" 
+                   required>
+
+            <button type="submit">Submit Bid</button>
+
+        </form>
+
+    </div>
+</div>
+
+<!-- ✅ UPDATED SCRIPT -->
+<script>
+
+function openModal(id, budget, lowestBid) {
+
+    document.getElementById("bidModal").style.display = "block";
+
+    document.getElementById("project_id").value = id;
+
+    document.getElementById("project_budget").innerText = budget;
+
+    if(lowestBid == 0){
+        document.getElementById("lowest_bid").innerText = "No bids yet";
+    }
+    else{
+        document.getElementById("lowest_bid").innerText = lowestBid;
+    }
+}
+
+function closeModal() {
+    document.getElementById("bidModal").style.display = "none";
+}
+
+document.getElementById("bidForm").addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    let formData = new FormData(this);
+
+    fetch("/apply_project", {
+        method: "POST",
+        body: formData
+    })
+
+    .then(response => response.text())
+
+    .then(data => {
+
+        alert("✅ Your bid has been submitted successfully!");
+
+        closeModal();
+
+        location.reload();
+
+    });
+
+});
+
+</script>
+
+</div>
+</body>
+</html>

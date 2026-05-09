@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+
+    <style>
+       body {
+            margin: 0;
+            font-family: Arial;
+            background: url('https://images.unsplash.com/photo-1551434678-e076c223a692') no-repeat center center/cover;
+            color: white;
+        }
+
+        .overlay {
+            background: rgba(0,0,0,0.7);
+            min-height: 100vh;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 30px;
+            background: rgba(0,0,0,0.9);
+        }
+
+        .logo {
+            color: #00c6ff;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            padding: 8px 14px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: #00c6ff;
+            color: black;
+        }
+
+        .active {
+            background: #ff4d4d;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background: white;
+            color: black;
+            width: 420px;
+            margin: 60px auto;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 20px rgba(0,0,0,0.3);
+        }
+
+        .top-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .top-section img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+        }
+
+        .profile-btn {
+            padding: 10px;
+            background: #00c6ff;
+            border: none;
+            color: black;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .profile-btn:hover {
+            background: #009acd;
+            color: white;
+        }
+
+        .center-text {
+            text-align: center;
+            margin-top: 120px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="overlay">
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">Freelancing Hub</div>
+
+        <div class="nav-links">
+
+            {% if role == 'employee' %}
+                <a href="/view_projects">View Projects</a>
+
+            {% elif role == 'employer' %}
+                <a href="/dashboard" class="active">Profile</a>
+                <a href="/post_project">Post Project</a>
+                <a href="/view_projects">View Posts</a>
+                <a href="/view_applications">View Assigned Tasks</a>
+
+            {% elif role == 'admin' %}
+                <a href="/post_resource">Post Resource</a>
+                <a href="/view_resources">View Resources</a>
+            {% endif %}
+
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <!-- EMPLOYER PROFILE -->
+    {% if role == 'employer' %}
+    <div class="profile-card">
+
+        <!-- Top -->
+        <div class="top-section">
+            <img src="{{ url_for('static', filename='uploads/' + image) if image and image != '' else url_for('static', filename='default.jpg') }}">
+
+            <div>
+                <h2 style="margin:0;">{{ session['user'] }}</h2>
+
+                <p style="margin:6px 0; color:#666; font-size:14px;">
+                    {{ gender }} | {{ phone }}
+                </p>
+
+                <p style="margin:4px 0; font-size:13px; color:#888;">
+                👤 Employer
+                </p>
+            </div>
+        </div>
+
+        <hr style="margin:20px 0;">
+
+        <!-- Contact Info -->
+        <div>
+            <p style="font-weight:bold;">📞 Contact Info</p>
+
+            <p>📧 {{ session['user'] }}</p>
+            <p>📱 {{ phone }}</p>
+        </div>
+
+        <div style="text-align:center; margin-top:20px;">
+            <a href="/edit_profile">
+                <button class="profile-btn">Manage Profile</button>
+            </a>
+        </div>
+
+    </div>
+
+    {% else %}
+        <!-- Other roles -->
+        <div class="center-text">
+            <h1>Welcome, {{ role|capitalize }}</h1>
+            <p>Manage your work efficiently!</p>
+        </div>
+    {% endif %}
+
+</div>
+</body>
+</html>

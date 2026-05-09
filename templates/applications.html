@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Applications</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: url('https://images.unsplash.com/photo-1551434678-e076c223a692') no-repeat center center/cover;
+            color: white;
+        }
+
+        .overlay {
+            background: rgba(0, 0, 0, 0.7);
+            min-height: 100vh;
+        }
+
+        /* ✅ SAME NAVBAR */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 30px;
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .logo {
+            color: #00c6ff;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            padding: 8px 14px;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover {
+            background: #00c6ff;
+            color: black;
+        }
+
+        .active {
+            background: #ff4d4d;
+        }
+
+        .container {
+            padding: 40px;
+        }
+
+        h2 {
+            margin-bottom: 25px;
+        }
+
+        /* ✅ CARD CONTAINER */
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+
+        /* ✅ CARD */
+        .card {
+            background: white;
+            color: black;
+            width: 320px;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            color: #00c6ff;
+            margin-top: 0;
+        }
+
+        .card p {
+            margin: 10px 0;
+            font-size: 15px;
+        }
+
+        .bid {
+            color: green;
+            font-weight: bold;
+        }
+
+        /* ✅ BUTTONS */
+        .btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .status-btn {
+            background: #00c6ff;
+            color: black;
+        }
+
+        .payment-btn {
+            background: #28a745;
+            color: white;
+        }
+
+        .assign-btn {
+            background: #ff9800;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="overlay">
+
+        <!-- ✅ NAVBAR -->
+        <div class="navbar">
+
+            <div class="logo">
+                Freelancing Hub
+            </div>
+
+            <div class="nav-links">
+                <a href="/dashboard">Profile</a>
+                <a href="/post_project">Post Project</a>
+                <a href="/view_projects">View Posts</a>
+                <a href="/view_applications" class="active">View Assigned Tasks</a>
+                <a href="/logout">Logout</a>
+            </div>
+
+        </div>
+
+        <!-- ✅ CONTENT -->
+        <div class="container">
+
+            <h2>Applications</h2>
+
+            <div class="cards-container">
+
+                {% for d in data %}
+
+                <div class="card">
+
+                    <h3>{{ d.title }}</h3>
+
+                    <hr>
+
+                    <p>
+                        👤 <b>Assigned Freelancer:</b>
+                        {{ d.name }}
+                    </p>
+
+                    <p>
+                        📧 <b>Email:</b>
+                        {{ d.email }}
+                    </p>
+
+                    <p>
+                        📞 <b>Phone:</b>
+                        {{ d.phone }}
+                    </p>
+
+                    <p class="bid">
+                        🔥 <b>Bid Amount:</b>
+                        ₹{{ d.bid_amount }}
+                    </p>
+
+                    <p>
+                        📅 <b>Deadline:</b>
+                        {{ d.deadline }}
+                    </p>
+
+                    <p>
+                        🕒 <b>Posted Date:</b>
+                        {{ d.posted_date }}
+                    </p>
+
+
+                    <a href="/view_status/{{ d.project_id }}">
+                        <button class="btn status-btn">
+                            📊 View Status
+                        </button>
+                    </a>
+
+                    <!-- ✅ PAYMENT -->
+                    <button class="btn payment-btn">
+                        💸 Make/View Payment
+                    </button>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

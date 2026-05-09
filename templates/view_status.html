@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project Status</title>
+
+    <style>
+
+        body{
+            margin:0;
+            font-family:Arial;
+            background:url('https://images.unsplash.com/photo-1551434678-e076c223a692') no-repeat center center/cover;
+            color:white;
+        }
+
+        .overlay{
+            background:rgba(0,0,0,0.7);
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }
+
+        .card{
+            background:white;
+            color:black;
+            width:400px;
+            padding:30px;
+            border-radius:15px;
+            text-align:center;
+            box-shadow:0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .card h2{
+            color:#00c6ff;
+        }
+
+        .progress-bar{
+            width:100%;
+            background:#ddd;
+            border-radius:20px;
+            overflow:hidden;
+            margin-top:20px;
+        }
+
+        .progress{
+            height:30px;
+            background:#00c6ff;
+            width:{{ project.progress }}%;
+            text-align:center;
+            line-height:30px;
+            color:white;
+            font-weight:bold;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="overlay">
+
+    <div class="card">
+
+        <h2>{{ project.title }}</h2>
+
+        <h3>Project Progress</h3>
+
+        <div class="progress-bar">
+
+            <div class="progress">
+                {{ project.progress }}%
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

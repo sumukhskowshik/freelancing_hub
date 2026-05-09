@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>View Bids</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f') no-repeat center center/cover;
+            color: white;
+        }
+
+        .overlay {
+            background: rgba(0, 0, 0, 0.75);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 30px;
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .logo {
+            color: #00c6ff;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            padding: 8px 14px;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover {
+            background: #00c6ff;
+            color: black;
+        }
+
+        .container {
+            width: 90%;
+            margin: auto;
+            padding-top: 40px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            color: black;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #00c6ff;
+            color: black;
+            padding: 14px;
+        }
+
+        td {
+            padding: 14px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background: #f1f1f1;
+        }
+
+        .lowest {
+            background: #d4edda !important;
+            font-weight: bold;
+        }
+
+        .btn {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .assign {
+            background: #28a745;
+            color: white;
+        }
+
+        .close {
+            background: red;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="overlay">
+
+        <div class="navbar">
+
+            <div class="logo">Freelancing Hub</div>
+
+            <div class="nav-links">
+                <a href="/dashboard">Profile</a>
+                <a href="/post_project">Post Project</a>
+                <a href="/view_projects">View Projects</a>
+                <a href="/view_applications">View Assigned Tasks</a>
+                <a href="/logout">Logout</a>
+            </div>
+
+        </div>
+
+        <div class="container">
+
+            <h2>
+                Bids For Project:
+                {{ project[0] }}
+            </h2>
+
+            <table>
+
+                <tr>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Bid Amount</th>
+                    <th>Action</th>
+                </tr>
+
+                {% for bid in bids %}
+
+                <tr {% if loop.first %}class="lowest" {% endif %}>
+
+                    <td>{{ bid[0] }}</td>
+                    <td>{{ bid[1] }}</td>
+                    <td>{{ bid[2] }}</td>
+                    <td>{{ bid[3] }}</td>
+                    <td>₹{{ bid[4] }}</td>
+
+                    <td>
+
+                        <a href="/assign_task/{{ project_id }}/{{ bid[3] }}">
+                            <button class="btn assign">
+                                Assign Task
+                            </button>
+                        </a>
+
+                        <a href="/close_project/{{ project_id }}">
+                            <button class="btn close">
+                                Close
+                            </button>
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </table>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Tasks</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: url('https://images.unsplash.com/photo-1551434678-e076c223a692') no-repeat center center/cover;
+            color: white;
+        }
+
+        .overlay {
+            background: rgba(0, 0, 0, 0.7);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 30px;
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .logo {
+            color: #00c6ff;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            padding: 8px 14px;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover {
+            background: #00c6ff;
+            color: black;
+        }
+
+        .active {
+            background: #ff4d4d;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            padding: 40px;
+        }
+
+        .card {
+            background: white;
+            width: 320px;
+            padding: 20px;
+            border-radius: 12px;
+            color: black;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h3 {
+            color: #00c6ff;
+            margin-top: 0;
+        }
+
+        .skills span {
+            background: #e0e7ff;
+            color: #2d6cdf;
+            padding: 5px 10px;
+            margin: 3px;
+            display: inline-block;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+
+        .info {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .info span {
+            display: block;
+            margin-top: 5px;
+        }
+
+        .status-btn {
+            width: 100%;
+            margin-top: 15px;
+            padding: 10px;
+            background: #2d6cdf;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .status-btn:hover {
+            background: #1748a0;
+        }
+
+        /* MODAL */
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-content {
+            background: white;
+            color: black;
+            width: 420px;
+            margin: 5% auto;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 15px;
+            top: 10px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #555;
+        }
+
+        .circle-wrap {
+            margin: 20px auto;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: conic-gradient(#4ade80 calc(var(--progress) * 1%),
+                    #ff6b6b 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .circle-inner {
+            width: 160px;
+            height: 160px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            font-weight: bold;
+        }
+
+        .update-box {
+            margin-top: 20px;
+        }
+
+        .update-box input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+            box-sizing: border-box;
+        }
+
+        .update-btn {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            background: #2d6cdf;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="overlay">
+
+        <div class="navbar">
+
+            <div class="logo">
+                Freelancing Hub
+            </div>
+
+            <div class="nav-links">
+
+                <a href="/employee_dashboard">Profile</a>
+
+                <a href="/employee_projects">
+                    View Projects
+                </a>
+
+                <a href="/my_tasks" class="active">
+                    My Tasks
+                </a>
+
+                <a href="/view_resources">
+                    Resources
+                </a>
+
+                <a href="/logout">
+                    Logout
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="container">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for msg in messages %}
+
+            <div style="
+            background:#28a745;
+            color:white;
+            padding:12px;
+            margin-bottom:20px;
+            border-radius:6px;
+            width:320px;
+            font-weight:bold;
+        ">
+                {{ msg }}
+            </div>
+
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            {% for t in tasks %}
+
+            <div class="card">
+
+                <h3>{{ t.title }}</h3>
+
+                <p>{{ t.description }}</p>
+
+                <div class="skills">
+
+                    {% for skill in t.skills.split(',') %}
+
+                    <span>{{ skill.strip() }}</span>
+
+                    {% endfor %}
+
+                </div>
+
+                <div class="info">
+
+                    <span>
+                        💰 Budget: ₹{{ t.budget }}
+                    </span>
+
+                    <span>
+                        💸 Your Bid: ₹{{ t.bid_amount }}
+                    </span>
+
+                    <span>
+                        📅 Deadline: {{ t.deadline }}
+                    </span>
+
+                    <span>
+                        ✅ Status: Assigned
+                    </span>
+
+                    <span>
+                        📊 Progress: {{ t.progress }}%
+                    </span>
+
+                </div>
+
+                <button class="status-btn" onclick="openModal('{{ t.id }}', '{{ t.progress }}')">
+
+                    📊 View Status
+
+                </button>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    <!-- MODAL -->
+
+    <div id="progressModal" class="modal">
+
+        <div class="modal-content">
+
+            <span class="close" onclick="closeModal()">&times;</span>
+
+            <h2>Task Progress</h2>
+
+            <div class="circle-wrap" id="circleWrap">
+
+                <div class="circle-inner" id="progressText">
+                    0%
+                </div>
+
+            </div>
+
+            <form method="POST" action="/update_progress" onsubmit="showAlert()">
+
+                <input type="hidden" name="project_id" id="project_id">
+
+                <div class="update-box">
+
+                    <label>
+                        Update Completion %
+                    </label>
+
+                    <input type="number" name="progress" min="0" max="100" required>
+
+                    <button type="submit" class="update-btn">
+                        🔄 Submit Update
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        function openModal(projectId, progress) {
+
+            document.getElementById("progressModal").style.display = "block";
+
+            document.getElementById("project_id").value = projectId;
+
+            document.getElementById("progressText").innerText = progress + "%";
+
+            document.getElementById("circleWrap")
+                .style.setProperty('--progress', progress);
+        }
+
+        function closeModal() {
+
+            document.getElementById("progressModal").style.display = "none";
+        }
+
+        function showAlert() {
+
+            alert("✅ Progress submitted successfully!");
+        }
+
+    </script>
+
+</body>
+
+</html>
