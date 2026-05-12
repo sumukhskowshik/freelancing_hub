@@ -83,6 +83,6 @@ python app.py
 - Admin analytics dashboard
 - File submission system
 
-## Author
+👨‍💻 Developed By
 
 Sumukh S Kowshik
