@@ -182,6 +182,16 @@
                     </p>
 
                     <p>
+                        💰 <b>Total Paid:</b>
+                        ₹{{ d.total_paid }}
+                    </p>
+
+                    <p>
+                        🧾 <b>Remaining:</b>
+                        ₹{{ d.remaining }}
+                    </p>
+
+                    <p>
                         📅 <b>Deadline:</b>
                         {{ d.deadline }}
                     </p>
@@ -191,7 +201,6 @@
                         {{ d.posted_date }}
                     </p>
 
-
                     <a href="/view_status/{{ d.project_id }}">
                         <button class="btn status-btn">
                             📊 View Status
@@ -199,7 +208,16 @@
                     </a>
 
                     <!-- ✅ PAYMENT -->
-                    <button class="btn payment-btn">
+                    <button
+                        class="btn payment-btn"
+                        onclick="openPaymentModal(
+                            '{{ d.project_id }}',
+                            '{{ d.email }}',
+                            '{{ d.bid_amount }}',
+                            '{{ d.total_paid }}',
+                            '{{ d.remaining }}'
+                        )"
+                    >
                         💸 Make/View Payment
                     </button>
 
@@ -212,6 +230,141 @@
         </div>
 
     </div>
+
+    <!-- ✅ PAYMENT MODAL -->
+    <div id="paymentModal" style="
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.7);
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+    ">
+
+        <div style="
+        background:white;
+        color:black;
+        width:400px;
+        padding:25px;
+        border-radius:12px;
+        position:relative;
+        ">
+
+            <!-- CLOSE -->
+            <span
+                onclick="closePaymentModal()"
+                style="
+                position:absolute;
+                top:10px;
+                right:15px;
+                font-size:24px;
+                cursor:pointer;
+                font-weight:bold;
+                "
+            >
+                ×
+            </span>
+
+            <h2 style="margin-top:0;">
+                Make Payment
+            </h2>
+
+            <p>
+                <b>Bid Amount:</b>
+                ₹<span id="bidAmount"></span>
+            </p>
+
+            <p>
+                <b>Total Paid:</b>
+                ₹<span id="totalPaid"></span>
+            </p>
+
+            <p>
+                <b>Remaining:</b>
+                ₹<span id="remainingAmount"></span>
+            </p>
+
+            <form action="/add_payment" method="POST">
+
+                <!-- HIDDEN VALUES -->
+                <input type="hidden" name="project_id" id="projectId">
+
+                <input type="hidden" name="employee_email" id="employeeEmail">
+
+                <!-- NOTE -->
+                <textarea
+                    name="note"
+                    placeholder="Payment Note"
+                    required
+                    style="
+                    width:100%;
+                    padding:10px;
+                    border-radius:6px;
+                    border:1px solid #ccc;
+                    margin-top:10px;
+                    "
+                ></textarea>
+
+                <!-- AMOUNT -->
+                <input
+                    type="number"
+                    name="amount"
+                    id="paymentInput"
+                    placeholder="Amount"
+                    required
+                    min="1"
+                    style="
+                    width:100%;
+                    padding:10px;
+                    border-radius:6px;
+                    border:1px solid #ccc;
+                    margin-top:10px;
+                    "
+                >
+
+                <!-- BUTTON -->
+                <button
+                    type="submit"
+                    class="btn payment-btn"
+                >
+                    💸 Make Payment
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <script>
+
+    function openPaymentModal(projectId, email, bid, paid, remaining)
+    {
+        document.getElementById("paymentModal").style.display = "flex";
+
+        document.getElementById("projectId").value = projectId;
+
+        document.getElementById("employeeEmail").value = email;
+
+        document.getElementById("bidAmount").innerText = bid;
+
+        document.getElementById("totalPaid").innerText = paid;
+
+        document.getElementById("remainingAmount").innerText = remaining;
+
+        document.getElementById("paymentInput").max = remaining;
+    }
+
+    function closePaymentModal()
+    {
+        document.getElementById("paymentModal").style.display = "none";
+    }
+
+    </script>
 
 </body>
 

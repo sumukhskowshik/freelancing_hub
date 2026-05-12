@@ -399,6 +399,23 @@ def view_applications():
 
         data = cur.fetchall()
 
+        # ✅ PAYMENT DETAILS
+        for d in data:
+
+            cur.execute("""
+                SELECT IFNULL(SUM(amount),0)
+                AS total_paid
+                FROM payments
+                WHERE project_id=%s
+                AND employee_email=%s
+            """, (d['project_id'], d['email']))
+
+            payment = cur.fetchone()
+
+            d['total_paid'] = float(payment['total_paid'])
+
+            d['remaining'] = float(d['bid_amount']) - d['total_paid']
+
         conn.close()
 
         return render_template(
@@ -407,7 +424,6 @@ def view_applications():
         )
 
     return redirect('/login')
-
 
 # =========================
 # EDIT PROFILE
@@ -872,6 +888,135 @@ def update_progress():
         conn.close()
 
         return redirect('/my_tasks')
+
+    return redirect('/login')
+
+# =========================
+# ADD PAYMENT
+# =========================
+@app.route('/add_payment', methods=['POST'])
+def add_payment():
+
+    if 'user' in session and session['role'] == 'employer':
+
+        project_id = request.form['project_id']
+        employee_email = request.form['employee_email']
+        amount = request.form['amount']
+        note = request.form['note']
+
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="freelance"
+        )
+
+        cur = conn.cursor()
+
+        # Get total already paid
+        cur.execute("""
+            SELECT IFNULL(SUM(amount),0)
+            FROM payments
+            WHERE project_id=%s
+            AND employee_email=%s
+        """, (project_id, employee_email))
+
+        total_paid = float(cur.fetchone()[0])
+
+        # Get bid amount
+        cur.execute("""
+            SELECT bid_amount
+            FROM applications
+            WHERE project_id=%s
+            AND employee_email=%s
+        """, (project_id, employee_email))
+
+        bid = cur.fetchone()
+
+        if bid:
+
+            total_bid = float(bid[0])
+
+            remaining = total_bid - total_paid
+
+            # Prevent overpayment
+            if float(amount) > remaining:
+
+                conn.close()
+
+                return "Payment exceeds remaining amount"
+
+            # Insert payment
+            cur.execute("""
+                INSERT INTO payments
+                (project_id, employee_email, amount, note)
+                VALUES (%s, %s, %s, %s)
+            """, (project_id, employee_email, amount, note))
+
+            conn.commit()
+
+        conn.close()
+
+        return redirect('/view_applications')
+
+    return redirect('/login')
+
+# =========================
+# VIEW PAYMENTS
+# =========================
+@app.route('/view_payments/<int:project_id>')
+def view_payments(project_id):
+
+    if 'user' in session and session['role'] == 'employee':
+
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="freelance"
+        )
+
+        cur = conn.cursor(dictionary=True)
+
+        # Get project
+        cur.execute("""
+            SELECT title
+            FROM projects
+            WHERE id=%s
+        """, (project_id,))
+
+        project = cur.fetchone()
+
+        # Get payments
+        cur.execute("""
+            SELECT *
+            FROM payments
+            WHERE project_id=%s
+            AND employee_email=%s
+            ORDER BY payment_date DESC
+        """, (project_id, session['user']))
+
+        payments = cur.fetchall()
+
+        # Total received
+        cur.execute("""
+            SELECT IFNULL(SUM(amount),0)
+            AS total
+            FROM payments
+            WHERE project_id=%s
+            AND employee_email=%s
+        """, (project_id, session['user']))
+
+        total = cur.fetchone()
+
+        conn.close()
+
+        return render_template(
+            'view_payments.html',
+            payments=payments,
+            total=total['total'],
+            project=project
+        )
 
     return redirect('/login')
 

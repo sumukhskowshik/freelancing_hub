@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>View Payments</title>
+
+    <style>
+
+    body {
+        margin: 0;
+        font-family: Arial;
+        background: url('https://images.unsplash.com/photo-1551434678-e076c223a692')
+        no-repeat center center/cover;
+        color: white;
+    }
+
+    .overlay {
+        background: rgba(0, 0, 0, 0.7);
+        min-height: 100vh;
+    }
+
+    /* NAVBAR */
+
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 30px;
+        background: rgba(0, 0, 0, 0.9);
+    }
+
+    .logo {
+        color: #00c6ff;
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+    .nav-links a {
+        color: white;
+        text-decoration: none;
+        margin-left: 15px;
+        padding: 8px 14px;
+        border-radius: 5px;
+    }
+
+    .nav-links a:hover {
+        background: #00c6ff;
+        color: black;
+    }
+
+    /* CONTAINER */
+
+    .container {
+        padding: 40px;
+    }
+
+    /* MAIN CARD */
+
+    .card {
+        background: white;
+        width: 340px;
+        padding: 18px;
+        border-radius: 14px;
+        color: black;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    .card h2 {
+        color: #00c6ff;
+        margin-top: 0;
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .project-title {
+        font-size: 13px;
+        margin-bottom: 15px;
+    }
+
+    .total-box {
+        background: #f5f5f5;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+
+    .total-title {
+        color: #555;
+        font-size: 11px;
+    }
+
+    .total-amount {
+        font-size: 24px;
+        font-weight: bold;
+        color: #28a745;
+        margin-top: 4px;
+    }
+
+    /* PAYMENT ITEM */
+
+    .payment-item {
+        background: #f9f9f9;
+        padding: 10px;
+        border-radius: 8px;
+        margin-top: 10px;
+    }
+
+    .payment-amount {
+        font-size: 18px;
+        font-weight: bold;
+        color: #28a745;
+    }
+
+    .payment-date {
+        margin-top: 6px;
+        color: #666;
+        font-size: 11px;
+    }
+
+    .payment-note {
+        margin-top: 6px;
+        background: white;
+        padding: 6px;
+        border-radius: 6px;
+        font-size: 11px;
+    }
+
+    /* BACK BUTTON */
+
+    .back-btn {
+        width: 100%;
+        padding: 10px;
+        margin-top: 15px;
+        border: none;
+        background: #ff4d4d;
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 13px;
+    }
+
+    .back-btn:hover {
+        opacity: 0.9;
+    }
+
+</style>
+
+</head>
+
+<body>
+
+    <div class="overlay">
+
+        <!-- NAVBAR -->
+
+        <div class="navbar">
+
+            <div class="logo">
+                Freelancing Hub
+            </div>
+
+            <div class="nav-links">
+
+                <a href="/employee_dashboard">
+                    Profile
+                </a>
+
+                <a href="/employee_projects">
+                    View Projects
+                </a>
+
+                <a href="/my_tasks">
+                    My Tasks
+                </a>
+
+                <a href="/view_resources">
+                    Resources
+                </a>
+
+                <a href="/logout">
+                    Logout
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- CONTENT -->
+
+        <div class="container">
+
+            <div class="card">
+
+                <h2>
+                    💰 Payment History
+                </h2>
+
+                <div class="project-title">
+
+                    {{ project.title }}
+
+                </div>
+
+                <!-- TOTAL -->
+
+                <div class="total-box">
+
+                    <div class="total-title">
+                        Total Received
+                    </div>
+
+                    <div class="total-amount">
+
+                        ₹{{ total }}
+
+                    </div>
+
+                </div>
+
+                <!-- PAYMENTS -->
+
+                {% if payments %}
+
+                    {% for p in payments %}
+
+                    <div class="payment-item">
+
+                        <div class="payment-amount">
+
+                            ₹{{ p.amount }}
+
+                        </div>
+
+                        <div class="payment-date">
+
+                            📅 {{ p.payment_date }}
+
+                        </div>
+
+                        <div class="payment-note">
+
+                            📝 {{ p.note }}
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="payment-item">
+
+                        No payments received yet.
+
+                    </div>
+
+                {% endif %}
+
+                <!-- BACK -->
+
+                <a href="/my_tasks">
+
+                    <button class="back-btn">
+
+                        ← Back
+
+                    </button>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

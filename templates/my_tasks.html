@@ -104,6 +104,24 @@
             background: #1748a0;
         }
 
+        /* ✅ PAYMENT BUTTON */
+
+        .payment-btn {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .payment-btn:hover {
+            background: #1d7f34;
+        }
+
         /* MODAL */
 
         .modal {
@@ -285,11 +303,25 @@
 
                 </div>
 
+                <!-- STATUS BUTTON -->
+
                 <button class="status-btn" onclick="openModal('{{ t.id }}', '{{ t.progress }}')">
 
                     📊 View Status
 
                 </button>
+
+                <!-- ✅ PAYMENT BUTTON -->
+
+                <a href="/view_payments/{{ t.id }}">
+
+                    <button class="payment-btn">
+
+                        💰 View Payments
+
+                    </button>
+
+                </a>
 
             </div>
 
