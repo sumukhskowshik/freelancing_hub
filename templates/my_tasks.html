@@ -104,8 +104,6 @@
             background: #1748a0;
         }
 
-        /* ✅ PAYMENT BUTTON */
-
         .payment-btn {
             width: 100%;
             margin-top: 10px;
@@ -120,6 +118,36 @@
 
         .payment-btn:hover {
             background: #1d7f34;
+        }
+
+        /* ✅ COMPLETE BUTTON */
+
+        .complete-btn {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            background: #ff9800;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .complete-btn:hover {
+            background: #d97d00;
+        }
+
+        /* ✅ BADGE */
+
+        .badge {
+            margin-top: 10px;
+            background: #28a745;
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
         }
 
         /* MODAL */
@@ -241,25 +269,6 @@
         </div>
 
         <div class="container">
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            {% for msg in messages %}
-
-            <div style="
-            background:#28a745;
-            color:white;
-            padding:12px;
-            margin-bottom:20px;
-            border-radius:6px;
-            width:320px;
-            font-weight:bold;
-        ">
-                {{ msg }}
-            </div>
-
-            {% endfor %}
-            {% endif %}
-            {% endwith %}
 
             {% for t in tasks %}
 
@@ -303,15 +312,16 @@
 
                 </div>
 
-                <!-- STATUS BUTTON -->
+                <!-- STATUS -->
 
-                <button class="status-btn" onclick="openModal('{{ t.id }}', '{{ t.progress }}')">
+                <button class="status-btn"
+                    onclick="openModal('{{ t.id }}', '{{ t.progress }}')">
 
                     📊 View Status
 
                 </button>
 
-                <!-- ✅ PAYMENT BUTTON -->
+                <!-- PAYMENT -->
 
                 <a href="/view_payments/{{ t.id }}">
 
@@ -322,6 +332,30 @@
                     </button>
 
                 </a>
+
+                <!-- ✅ COMPLETION LOGIC -->
+
+                {% if t.progress == 100 and t.completion_status == 'pending' %}
+
+                    <a href="/mark_completed/{{ t.id }}">
+
+                        <button class="complete-btn">
+
+                            ✅ Mark as Completed
+
+                        </button>
+
+                    </a>
+
+                {% elif t.completion_status == 'completed' %}
+
+                    <div class="badge">
+
+                        🎉 Completion Submitted
+
+                    </div>
+
+                {% endif %}
 
             </div>
 
@@ -349,7 +383,7 @@
 
             </div>
 
-            <form method="POST" action="/update_progress" onsubmit="showAlert()">
+            <form method="POST" action="/update_progress">
 
                 <input type="hidden" name="project_id" id="project_id">
 
@@ -359,10 +393,16 @@
                         Update Completion %
                     </label>
 
-                    <input type="number" name="progress" min="0" max="100" required>
+                    <input type="number"
+                        name="progress"
+                        min="0"
+                        max="100"
+                        required>
 
                     <button type="submit" class="update-btn">
+
                         🔄 Submit Update
+
                     </button>
 
                 </div>
@@ -390,11 +430,6 @@
         function closeModal() {
 
             document.getElementById("progressModal").style.display = "none";
-        }
-
-        function showAlert() {
-
-            alert("✅ Progress submitted successfully!");
         }
 
     </script>

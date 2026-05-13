@@ -1021,6 +1021,37 @@ def view_payments(project_id):
     return redirect('/login')
 
 # =========================
+# MARK COMPLETED
+# =========================
+@app.route('/mark_completed/<int:project_id>')
+def mark_completed(project_id):
+
+    if 'user' in session and session['role'] == 'employee':
+
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="freelance"
+        )
+
+        cur = conn.cursor()
+
+        cur.execute("""
+            UPDATE projects
+            SET completion_status='completed'
+            WHERE id=%s
+        """, (project_id,))
+
+        conn.commit()
+
+        conn.close()
+
+        return redirect('/my_tasks')
+
+    return redirect('/login')
+
+# =========================
 # RUN
 # =========================
 if __name__ == '__main__':
