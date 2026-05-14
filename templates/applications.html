@@ -17,7 +17,6 @@
             min-height: 100vh;
         }
 
-        /* ✅ SAME NAVBAR */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -56,14 +55,12 @@
             margin-bottom: 25px;
         }
 
-        /* ✅ CARD CONTAINER */
         .cards-container {
             display: flex;
             flex-wrap: wrap;
             gap: 25px;
         }
 
-        /* ✅ CARD */
         .card {
             background: white;
             color: black;
@@ -93,7 +90,6 @@
             font-weight: bold;
         }
 
-        /* ✅ BUTTONS */
         .btn {
             width: 100%;
             padding: 10px;
@@ -114,9 +110,31 @@
             color: white;
         }
 
-        .assign-btn {
-            background: #ff9800;
+        .approve-btn {
+            background: #28a745;
             color: white;
+        }
+
+        .reject-btn {
+            background: #ff4d4d;
+            color: white;
+        }
+
+        .badge {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .pending {
+            background: #ff9800;
+        }
+
+        .approved {
+            background: #28a745;
         }
 
         .btn:hover {
@@ -129,7 +147,6 @@
 
     <div class="overlay">
 
-        <!-- ✅ NAVBAR -->
         <div class="navbar">
 
             <div class="logo">
@@ -146,7 +163,6 @@
 
         </div>
 
-        <!-- ✅ CONTENT -->
         <div class="container">
 
             <h2>Applications</h2>
@@ -197,8 +213,8 @@
                     </p>
 
                     <p>
-                        🕒 <b>Posted Date:</b>
-                        {{ d.posted_date }}
+                        📊 <b>Progress:</b>
+                        {{ d.progress }}%
                     </p>
 
                     <a href="/view_status/{{ d.project_id }}">
@@ -207,7 +223,8 @@
                         </button>
                     </a>
 
-                    <!-- ✅ PAYMENT -->
+                    <!-- PAYMENT -->
+
                     <button
                         class="btn payment-btn"
                         onclick="openPaymentModal(
@@ -221,6 +238,46 @@
                         💸 Make/View Payment
                     </button>
 
+                    <!-- COMPLETION STATUS -->
+
+                    {% if d.completion_status == 'completed' %}
+
+                        <div class="badge pending">
+
+                            🎉 Completion Pending Approval
+
+                        </div>
+
+                        <a href="/approve_completion/{{ d.project_id }}">
+
+                            <button class="btn approve-btn">
+
+                                ✅ Approve Completion
+
+                            </button>
+
+                        </a>
+
+                        <a href="/reject_completion/{{ d.project_id }}">
+
+                            <button class="btn reject-btn">
+
+                                ❌ Reject Completion
+
+                            </button>
+
+                        </a>
+
+                    {% elif d.completion_status == 'approved' %}
+
+                        <div class="badge approved">
+
+                            ✅ Project Completed & Closed
+
+                        </div>
+
+                    {% endif %}
+
                 </div>
 
                 {% endfor %}
@@ -231,7 +288,7 @@
 
     </div>
 
-    <!-- ✅ PAYMENT MODAL -->
+    <!-- PAYMENT MODAL -->
     <div id="paymentModal" style="
     display:none;
     position:fixed;
@@ -254,7 +311,6 @@
         position:relative;
         ">
 
-            <!-- CLOSE -->
             <span
                 onclick="closePaymentModal()"
                 style="
@@ -290,12 +346,10 @@
 
             <form action="/add_payment" method="POST">
 
-                <!-- HIDDEN VALUES -->
                 <input type="hidden" name="project_id" id="projectId">
 
                 <input type="hidden" name="employee_email" id="employeeEmail">
 
-                <!-- NOTE -->
                 <textarea
                     name="note"
                     placeholder="Payment Note"
@@ -309,7 +363,6 @@
                     "
                 ></textarea>
 
-                <!-- AMOUNT -->
                 <input
                     type="number"
                     name="amount"
@@ -326,7 +379,6 @@
                     "
                 >
 
-                <!-- BUTTON -->
                 <button
                     type="submit"
                     class="btn payment-btn"

@@ -377,6 +377,8 @@ def view_applications():
                 projects.deadline,
                 projects.posted_date,
                 projects.progress,
+                projects.completion_status,
+                projects.status,
                 users.name,
                 users.email,
                 users.phone,
@@ -391,7 +393,7 @@ def view_applications():
             JOIN users
             ON applications.employee_email = users.email
 
-            WHERE projects.status='assigned'
+            WHERE projects.status IN ('assigned', 'closed')
 
             ORDER BY applications.bid_amount ASC
 
@@ -399,7 +401,7 @@ def view_applications():
 
         data = cur.fetchall()
 
-        # ✅ PAYMENT DETAILS
+        # PAYMENT DETAILS
         for d in data:
 
             cur.execute("""
@@ -1048,6 +1050,69 @@ def mark_completed(project_id):
         conn.close()
 
         return redirect('/my_tasks')
+
+    return redirect('/login')
+
+# =========================
+# APPROVE COMPLETION
+# =========================
+@app.route('/approve_completion/<int:project_id>')
+def approve_completion(project_id):
+
+    if 'user' in session and session['role'] == 'employer':
+
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="freelance"
+        )
+
+        cur = conn.cursor()
+
+        cur.execute("""
+            UPDATE projects
+            SET completion_status='approved',
+                status='closed'
+            WHERE id=%s
+        """, (project_id,))
+
+        conn.commit()
+
+        conn.close()
+
+        return redirect('/view_applications')
+
+    return redirect('/login')
+
+# =========================
+# REJECT COMPLETION
+# =========================
+@app.route('/reject_completion/<int:project_id>')
+def reject_completion(project_id):
+
+    if 'user' in session and session['role'] == 'employer':
+
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="freelance"
+        )
+
+        cur = conn.cursor()
+
+        cur.execute("""
+            UPDATE projects
+            SET completion_status='pending'
+            WHERE id=%s
+        """, (project_id,))
+
+        conn.commit()
+
+        conn.close()
+
+        return redirect('/view_applications')
 
     return redirect('/login')
 
