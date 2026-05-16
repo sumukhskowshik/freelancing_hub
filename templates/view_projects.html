@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>View Projects</title>
 
@@ -12,7 +13,7 @@
         }
 
         .overlay {
-            background: rgba(0,0,0,0.7);
+            background: rgba(0, 0, 0, 0.7);
             min-height: 100vh;
         }
 
@@ -21,7 +22,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 30px;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0, 0, 0, 0.9);
         }
 
         .logo {
@@ -84,7 +85,7 @@
             padding: 20px;
             border-radius: 12px;
             color: black;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
             transition: transform 0.2s;
         }
 
@@ -131,19 +132,19 @@
             font-weight: bold;
         }
 
-        .apply { 
+        .apply {
             background: #00c6ff;
             color: black;
         }
 
-        .delete { 
-            background: red; 
-            color: white; 
+        .delete {
+            background: red;
+            color: white;
         }
 
-        .view { 
-            background: #555; 
-            color: white; 
+        .view {
+            background: #555;
+            color: white;
         }
 
         .no-result {
@@ -159,7 +160,7 @@
             position: fixed;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0, 0, 0, 0.6);
             top: 0;
             left: 0;
             z-index: 1000;
@@ -173,7 +174,7 @@
             border-radius: 12px;
             text-align: center;
             color: black;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         }
 
         .modal-content h3 {
@@ -219,181 +220,175 @@
 
 <body>
 
-<div class="overlay">
+    <div class="overlay">
 
-<div class="navbar">
-    <div class="logo">Freelancing Hub</div>
+        <div class="navbar">
+            <div class="logo">Freelancing Hub</div>
 
-    <div class="nav-links">
+            <div class="nav-links">
 
-        {% if role == 'employer' %}
-            <a href="/dashboard">Profile</a>
-            <a href="/post_project">Post Project</a>
-            <a href="/view_projects" class="active">View Posts</a>
-            <a href="/view_applications">View Assigned Tasks</a>
+                {% if role == 'employer' %}
+                <a href="/dashboard">Profile</a>
+                <a href="/post_project">Post Project</a>
+                <a href="/view_projects" class="active">View Posts</a>
+                <a href="/view_applications">View Assigned Tasks</a>
 
-        {% elif role == 'employee' %}
-            <a href="/employee_dashboard">Profile</a>
-            <a href="/employee_projects" class="active">View Projects</a>
-            <a href="/my_tasks">My Tasks</a>
-            <a href="/view_resources">Resources</a>
+                {% elif role == 'employee' %}
+                <a href="/employee_dashboard">Profile</a>
+                <a href="/employee_projects" class="active">View Projects</a>
+                <a href="/my_tasks">My Tasks</a>
+                <a href="/view_resources">Resources</a>
 
-        {% endif %}
+                {% endif %}
 
-        <a href="/logout">Logout</a>
-    </div>
-</div>
-
-<div class="search-box">
-    <form method="POST">
-        <input type="text" name="search" placeholder="Search by project title or skills..." required>
-        <button type="submit">Search</button>
-    </form>
-</div>
-
-<div class="container">
-
-{% if projects|length == 0 %}
-    <div class="no-result">No matching projects found ❌</div>
-{% endif %}
-
-{% for p in projects %}
-<div class="card">
-
-    <h3>{{ p[1] }}</h3>
-    <p>{{ p[2] }}</p>
-
-    <div class="skills">
-        {% if p[3] %}
-            {% for skill in p[3].split(',') %}
-                <span>{{ skill.strip() }}</span>
-            {% endfor %}
-        {% else %}
-            <span>No skills</span>
-        {% endif %}
-    </div>
-
-    <div class="info">
-        <span>💰 Budget: ₹{{ p[4] }}</span>
-        <span>📅 Deadline: {{ p[5] }}</span>
-        <span>🕒 Posted On: {{ p[6] }}</span>
-    </div>
-
-    <div class="actions">
-
-    {% if role == 'employee' %}
-        <button class="btn apply"
-            onclick="openModal({{ p[0] }}, {{ p[4] }}, {{ project_bids[p[0]] }})">
-            Apply / Bid
-        </button>
-
-    {% elif role == 'employer' %}
-        <a href="/delete_project/{{ p[0] }}">
-            <button class="btn delete">Delete</button>
-        </a>
-
-        <a href="/view_bids/{{ p[0] }}">
-            <button class="btn view">View Bids</button>
-        </a>
-    {% endif %}
-
-</div>
-
-</div>
-{% endfor %}
-
-</div>
-
-<!-- ✅ UPDATED MODAL -->
-<div id="bidModal" class="modal">
-    <div class="modal-content">
-
-        <span onclick="closeModal()" 
-              style="float:right; cursor:pointer; font-size:20px;">&times;</span>
-
-        <h3>Place Your Bid</h3>
-
-        <div class="modal-info">
-            <p>
-                <b>Current Lowest Bid:</b> 
-                ₹<span id="lowest_bid">0</span>
-            </p>
-
-            <p>
-                <b>Project Budget:</b> 
-                ₹<span id="project_budget">0</span>
-            </p>
+                <a href="/logout">Logout</a>
+            </div>
         </div>
 
-        <!-- ✅ FORM UPDATED -->
-        <form id="bidForm">
+        <div class="search-box">
+            <form method="GET">
+                <input type="text" name="search" placeholder="Search by project title or skills..." required>
+                <button type="submit">Search</button>
+            </form>
+        </div>
 
-            <input type="hidden" 
-                   name="project_id" 
-                   id="project_id">
+        <div class="container">
 
-            <input type="number" 
-                   name="bid" 
-                   placeholder="Enter your bid amount" 
-                   required>
+            {% if projects|length == 0 %}
+            <div class="no-result">No matching projects found ❌</div>
+            {% endif %}
 
-            <button type="submit">Submit Bid</button>
+            {% for p in projects %}
+            <div class="card">
 
-        </form>
+                <h3>{{ p[1] }}</h3>
+                <p>{{ p[2] }}</p>
+
+                <div class="skills">
+                    {% if p[3] %}
+                    {% for skill in p[3].split(',') %}
+                    <span>{{ skill.strip() }}</span>
+                    {% endfor %}
+                    {% else %}
+                    <span>No skills</span>
+                    {% endif %}
+                </div>
+
+                <div class="info">
+                    <span>💰 Budget: ₹{{ p[4] }}</span>
+                    <span>📅 Deadline: {{ p[5] }}</span>
+                    <span>🕒 Posted On: {{ p[6] }}</span>
+                </div>
+
+                <div class="actions">
+
+                    {% if role == 'employee' %}
+                    <button class="btn apply" onclick="openModal({{ p[0] }}, {{ p[4] }}, {{ project_bids[p[0]] }})">
+                        Apply / Bid
+                    </button>
+
+                    {% elif role == 'employer' %}
+                    <a href="/delete_project/{{ p[0] }}">
+                        <button class="btn delete">Delete</button>
+                    </a>
+
+                    <a href="/view_bids/{{ p[0] }}">
+                        <button class="btn view">View Bids</button>
+                    </a>
+                    {% endif %}
+
+                </div>
+
+            </div>
+            {% endfor %}
+
+        </div>
+
+        <!-- ✅ UPDATED MODAL -->
+        <div id="bidModal" class="modal">
+            <div class="modal-content">
+
+                <span onclick="closeModal()" style="float:right; cursor:pointer; font-size:20px;">&times;</span>
+
+                <h3>Place Your Bid</h3>
+
+                <div class="modal-info">
+                    <p>
+                        <b>Current Lowest Bid:</b>
+                        ₹<span id="lowest_bid">0</span>
+                    </p>
+
+                    <p>
+                        <b>Project Budget:</b>
+                        ₹<span id="project_budget">0</span>
+                    </p>
+                </div>
+
+                <!-- ✅ FORM UPDATED -->
+                <form id="bidForm">
+
+                    <input type="hidden" name="project_id" id="project_id">
+
+                    <input type="number" name="bid" placeholder="Enter your bid amount" required>
+
+                    <button type="submit">Submit Bid</button>
+
+                </form>
+
+            </div>
+        </div>
+
+        <!-- ✅ UPDATED SCRIPT -->
+        <script>
+
+            function openModal(id, budget, lowestBid) {
+
+                document.getElementById("bidModal").style.display = "block";
+
+                document.getElementById("project_id").value = id;
+
+                document.getElementById("project_budget").innerText = budget;
+
+                if (lowestBid == 0) {
+                    document.getElementById("lowest_bid").innerText = "No bids yet";
+                }
+                else {
+                    document.getElementById("lowest_bid").innerText = lowestBid;
+                }
+            }
+
+            function closeModal() {
+                document.getElementById("bidModal").style.display = "none";
+            }
+
+            document.getElementById("bidForm").addEventListener("submit", function (e) {
+
+                e.preventDefault();
+
+                let formData = new FormData(this);
+
+                fetch("/apply_project", {
+                    method: "POST",
+                    body: formData
+                })
+
+                    .then(response => response.text())
+
+                    .then(data => {
+
+                        alert("✅ Your bid has been submitted successfully!");
+
+                        closeModal();
+
+                        location.reload();
+
+                    });
+
+            });
+
+        </script>
 
     </div>
-</div>
-
-<!-- ✅ UPDATED SCRIPT -->
-<script>
-
-function openModal(id, budget, lowestBid) {
-
-    document.getElementById("bidModal").style.display = "block";
-
-    document.getElementById("project_id").value = id;
-
-    document.getElementById("project_budget").innerText = budget;
-
-    if(lowestBid == 0){
-        document.getElementById("lowest_bid").innerText = "No bids yet";
-    }
-    else{
-        document.getElementById("lowest_bid").innerText = lowestBid;
-    }
-}
-
-function closeModal() {
-    document.getElementById("bidModal").style.display = "none";
-}
-
-document.getElementById("bidForm").addEventListener("submit", function(e){
-
-    e.preventDefault();
-
-    let formData = new FormData(this);
-
-    fetch("/apply_project", {
-        method: "POST",
-        body: formData
-    })
-
-    .then(response => response.text())
-
-    .then(data => {
-
-        alert("✅ Your bid has been submitted successfully!");
-
-        closeModal();
-
-        location.reload();
-
-    });
-
-});
-
-</script>
-
-</div>
 </body>
+
 </html>
