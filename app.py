@@ -137,13 +137,14 @@ def dashboard():
 
 
 # =========================
-# EMPLOYEE DASHBOARD (FIXED 🔥)
+# EMPLOYEE DASHBOARD
 # =========================
 @app.route('/employee_dashboard')
 def employee_dashboard():
-    print("SESSION DATA:", session)  # ✅ DEBUG
 
-    if 'user' in session and session['role'] == 'employee':  # ✅ FIX 1
+    print("SESSION DATA:", session)
+
+    if 'user' in session and session['role'] == 'employee':
 
         conn = mysql.connector.connect(
             host="localhost",
@@ -151,41 +152,97 @@ def employee_dashboard():
             password="",
             database="freelance"
         )
+
         cursor = conn.cursor(dictionary=True)
 
-        # ✅ Fetch projects
+        # FETCH PROJECTS
         cursor.execute("SELECT * FROM projects")
         projects = cursor.fetchall()
 
-        # ✅ Fetch resources
+        # FETCH RESOURCES
         cursor.execute("SELECT * FROM resources")
         resources = cursor.fetchall()
 
-        # ✅ Fetch employee details
-        cursor.execute("SELECT gender, phone, image FROM users WHERE email=%s", (session['user'],))
+        # FETCH EMPLOYEE DETAILS
+        cursor.execute("""
+            SELECT gender, phone, image
+            FROM users
+            WHERE email=%s
+        """, (session['user'],))
+
         user_data = cursor.fetchone()
 
-        # ✅ Store values safely
+        # USER DETAILS
         if user_data:
+
             gender = user_data['gender'] if user_data['gender'] else ""
+
             phone = user_data['phone'] if user_data['phone'] else ""
-            image = user_data['image'] if user_data['image'] else "employee_default.png"  # ✅ FIX 2
+
+            image = user_data['image'] if user_data['image'] else "employee_default.png"
+
         else:
+
             gender = ""
             phone = ""
-            image = "employee_default.png"  # ✅ default image
+            image = "employee_default.png"
+
+        # =========================
+        # TOTAL EARNINGS
+        # =========================
+
+        cursor.execute("""
+            SELECT IFNULL(SUM(amount),0) AS earnings
+            FROM payments
+            WHERE employee_email=%s
+        """, (session['user'],))
+
+        earnings = cursor.fetchone()['earnings']
+
+        # =========================
+        # ACTIVE TASKS
+        # =========================
+
+        cursor.execute("""
+            SELECT COUNT(*) AS active_tasks
+            FROM projects
+            WHERE assigned_to=%s
+            AND status='assigned'
+        """, (session['user'],))
+
+        active_tasks = cursor.fetchone()['active_tasks']
+
+        # =========================
+        # COMPLETED TASKS
+        # =========================
+
+        cursor.execute("""
+            SELECT COUNT(*) AS completed_tasks
+            FROM projects
+            WHERE assigned_to=%s
+            AND completion_status='approved'
+        """, (session['user'],))
+
+        completed_tasks = cursor.fetchone()['completed_tasks']
+
+        conn.close()
 
         return render_template(
             'employee_dashboard.html',
+
             projects=projects,
             resources=resources,
+
             gender=gender,
             phone=phone,
-            image=image
+            image=image,
+
+            earnings=earnings,
+            active_tasks=active_tasks,
+            completed_tasks=completed_tasks
         )
 
-    else:
-        return redirect('/login')
+    return redirect('/login')
 
 # =========================
 # LOGOUT

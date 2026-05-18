@@ -4,10 +4,12 @@
     <title>Employee Dashboard</title>
 
     <style>
+
         body {
             margin: 0;
             font-family: Arial;
-            background: url('https://images.unsplash.com/photo-1498050108023-c5249f4df085') no-repeat center center/cover;
+            background: url('https://images.unsplash.com/photo-1498050108023-c5249f4df085')
+            no-repeat center center/cover;
             color: white;
         }
 
@@ -46,11 +48,45 @@
             background: #ff4d4d;
         }
 
+        /* DASHBOARD CARDS */
+
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .stats-card {
+            background: white;
+            color: black;
+            width: 220px;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .stats-card h2 {
+            margin: 0;
+            color: #00c6ff;
+            font-size: 32px;
+        }
+
+        .stats-card p {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        /* PROFILE CARD */
+
         .profile-card {
             background: white;
             color: black;
             width: 420px;
-            margin: 60px auto;
+            margin: 40px auto;
             padding: 25px;
             border-radius: 15px;
         }
@@ -73,52 +109,147 @@
             border: none;
             border-radius: 6px;
             cursor: pointer;
+            font-weight: bold;
         }
+
     </style>
 </head>
 
 <body>
+
 <div class="overlay">
 
     <!-- NAVBAR -->
+
     <div class="navbar">
-        <div class="logo">Freelancing Hub</div>
+
+        <div class="logo">
+            Freelancing Hub
+        </div>
 
         <div class="nav-links">
-            <a href="/employee_dashboard" class="active">Profile</a>
-            <a href="/employee_projects">View Projects</a>
-            <a href="/my_tasks">My Tasks</a>
-            <a href="/view_resources">Resources</a>
-            <a href="/logout">Logout</a>
+
+            <a href="/employee_dashboard" class="active">
+                Profile
+            </a>
+
+            <a href="/employee_projects">
+                View Projects
+            </a>
+
+            <a href="/my_tasks">
+                My Tasks
+            </a>
+
+            <a href="/view_resources">
+                Resources
+            </a>
+
+            <a href="/logout">
+                Logout
+            </a>
+
         </div>
+
+    </div>
+
+    <!-- STATS -->
+
+    <div class="stats-container">
+
+        <div class="stats-card">
+
+            <h2>
+                ₹{{ earnings }}
+            </h2>
+
+            <p>
+                💰 Total Earnings
+            </p>
+
+        </div>
+
+        <div class="stats-card">
+
+            <h2>
+                {{ active_tasks }}
+            </h2>
+
+            <p>
+                📌 Active Tasks
+            </p>
+
+        </div>
+
+        <div class="stats-card">
+
+            <h2>
+                {{ completed_tasks }}
+            </h2>
+
+            <p>
+                ✅ Completed Tasks
+            </p>
+
+        </div>
+
     </div>
 
     <!-- PROFILE CARD -->
+
     <div class="profile-card">
 
         <div class="top-section">
+
             <img src="{{ url_for('static', filename='uploads/' + image) }}">
 
             <div>
-                <h2>{{ session['user'] }}</h2>
-                <p>{{ gender }} | {{ phone }}</p>
-                <p>👨‍💻 Employee</p>
+
+                <h2>
+                    {{ session['user'] }}
+                </h2>
+
+                <p>
+                    {{ gender }} | {{ phone }}
+                </p>
+
+                <p>
+                    👨‍💻 Employee
+                </p>
+
             </div>
+
         </div>
 
         <hr>
 
-        <p><b>📧 Email:</b> {{ session['user'] }}</p>
-        <p><b>📱 Phone:</b> {{ phone }}</p>
+        <p>
+            <b>📧 Email:</b>
+            {{ session['user'] }}
+        </p>
+
+        <p>
+            <b>📱 Phone:</b>
+            {{ phone }}
+        </p>
 
         <div style="text-align:center;">
+
             <a href="/edit_profile">
-                <button class="btn">Manage Profile</button>
+
+                <button class="btn">
+
+                    Manage Profile
+
+                </button>
+
             </a>
+
         </div>
 
     </div>
 
 </div>
+
 </body>
 </html>
